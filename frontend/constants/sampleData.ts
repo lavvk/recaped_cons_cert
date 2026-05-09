@@ -10,6 +10,10 @@ export type SampleEvent = RecapedEventInfo & {
   isSample: true;
   code: string;
   materials: SampleMaterial[];
+  // Demo-only: if true, any connected wallet is treated as having had their
+  // QR ticket scanned at the door, so materials unlock automatically. If
+  // false, the wallet shows up as "not scanned" and materials stay locked.
+  scannedAtDoor: boolean;
 };
 
 const baseTime = Math.floor(Date.now() / 1000);
@@ -40,6 +44,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
     closed: false,
     isSample: true,
     code: "hello123",
+    scannedAtDoor: true,
     materials: [
       {
         kind: "Slides",
@@ -73,6 +78,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
     closed: false,
     isSample: true,
     code: "HACK2026",
+    scannedAtDoor: true,
     materials: [
       {
         kind: "Slides",
@@ -106,6 +112,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
     closed: false,
     isSample: true,
     code: "RESUME2026",
+    scannedAtDoor: false,
     materials: [
       {
         kind: "Slides",

@@ -13,7 +13,6 @@ import {
   Award,
   Users,
   Calendar,
-  ArrowRight,
   ShieldCheck,
 } from "lucide-react";
 import clsx from "clsx";
@@ -22,6 +21,7 @@ import { NetworkGate } from "@/components/NetworkGate";
 import { StatusChip, type StatusKind } from "@/components/StatusChip";
 import { MaterialCard } from "@/components/MaterialCard";
 import { TxStatus } from "@/components/TxStatus";
+import { Ticket } from "@/components/Ticket";
 import {
   useEvent,
   useAttendeeStatus,
@@ -136,7 +136,6 @@ export default function EventDetailPage() {
   const [proof, setProof] = useState("");
   const [approveAddr, setApproveAddr] = useState("");
   const [codeError, setCodeError] = useState<string | null>(null);
-  const [demoUnlocked, setDemoUnlocked] = useState(false);
 
   const isOrganizer = useMemo(
     () =>
@@ -162,6 +161,7 @@ export default function EventDetailPage() {
   const kind: StatusKind = isSampleId ? "sample" : statusKind(attendee);
   const progress = stepProgress(attendee);
   const unlocked = !!attendee?.approved || !!attendee?.badgeClaimed;
+  const sampleScanned = !!sampleMatch?.scannedAtDoor && isConnected;
 
   function handleJoin() {
     if (onChainId === undefined) return;
@@ -265,7 +265,7 @@ export default function EventDetailPage() {
               {Number(event.capacity)}
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck size={13} strokeWidth={2.5} /> Code-verified
+              <ShieldCheck size={13} strokeWidth={2.5} /> QR-verified
             </span>
           </div>
 
@@ -314,55 +314,26 @@ export default function EventDetailPage() {
         </section>
       )}
 
-      {/* Demo-only notice + code unlock */}
+      {/* Demo-only ticket card */}
       {isSampleId && sampleMatch && (
-        <div className="card p-4 space-y-3 border-amber-400/30 bg-amber-400/5">
-          <div className="text-amber-200 font-semibold text-sm">
-            Demo event
-          </div>
-          {!demoUnlocked ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setCodeError(null);
-                if (
-                  code.trim().toUpperCase() ===
-                  sampleMatch.code.trim().toUpperCase()
-                ) {
-                  setDemoUnlocked(true);
-                } else {
-                  setCodeError("Wrong code.");
-                }
-              }}
-              className="space-y-3"
-            >
+        <>
+          {!isConnected ? (
+            <div className="card p-5 space-y-3 text-center">
               <p className="muted">
-                Enter the event code to unlock the materials (slides, repo,
-                etc.). The organizer would share this code at the event.
+                Connect your wallet to see your ticket for this event.
               </p>
-              <input
-                className="input font-mono"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Event code"
-                autoComplete="off"
-              />
-              {codeError && (
-                <div className="text-xs text-red-300">{codeError}</div>
-              )}
-              <button type="submit" className="btn-primary w-full">
-                Unlock materials
-              </button>
-              <Link href="/create" className="btn-secondary w-full">
-                Or create your own event <ArrowRight size={14} />
-              </Link>
-            </form>
+              <div className="flex justify-center">
+                <ConnectButton showBalance={false} />
+              </div>
+            </div>
           ) : (
-            <p className="muted">
-              Unlocked. Materials are listed below.
-            </p>
+            <Ticket
+              address={address}
+              scanned={sampleScanned}
+              eventTitle={event.title}
+            />
           )}
-        </div>
+        </>
       )}
 
       {/* Connect prompt */}
@@ -496,7 +467,7 @@ export default function EventDetailPage() {
       <section className="space-y-2">
         <h2 className="h2">Materials</h2>
         {isSampleId ? (
-          !demoUnlocked ? (
+          !sampleScanned ? (
             <div className="card p-5 flex items-start gap-3">
               <div className="grid size-10 place-items-center rounded-xl bg-bg-elev text-ink-mute shrink-0">
                 <Lock size={18} />
@@ -504,7 +475,9 @@ export default function EventDetailPage() {
               <div>
                 <div className="font-semibold">Locked</div>
                 <p className="muted">
-                  Enter the event code above to unlock materials.
+                  {isConnected
+                    ? "Your ticket wasn't scanned at the door, so the materials are still locked. Find an organizer to scan your wallet QR."
+                    : "Connect your wallet so we can check whether your ticket was scanned at the door."}
                 </p>
               </div>
             </div>
