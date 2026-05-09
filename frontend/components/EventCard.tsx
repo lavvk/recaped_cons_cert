@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Users, ArrowUpRight } from "lucide-react";
+import { Users, ArrowUpRight, X } from "lucide-react";
 import { shortAddress, formatDate } from "@/lib/format";
 import { StatusChip, type StatusKind } from "./StatusChip";
+import { hideEvent } from "@/lib/hidden";
 
 export type EventCardProps = {
   id: bigint | number;
@@ -61,8 +62,21 @@ export function EventCard(props: EventCardProps) {
   return (
     <Link
       href={link}
-      className="card card-hover group block overflow-hidden"
+      className="card card-hover group block overflow-hidden relative"
     >
+      <button
+        type="button"
+        aria-label="Hide event"
+        title="Hide from list"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          hideEvent(String(id));
+        }}
+        className="absolute right-2 top-2 z-10 grid size-7 place-items-center rounded-full bg-black/40 text-white/80 hover:bg-red-500/80 hover:text-white opacity-0 group-hover:opacity-100 transition"
+      >
+        <X size={14} strokeWidth={2.5} />
+      </button>
       {/* Cover */}
       <div
         className="relative h-28 w-full"
