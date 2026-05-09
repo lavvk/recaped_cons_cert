@@ -28,9 +28,9 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
   {
     id: 1001n,
     organizer: "0x1111111111111111111111111111111111111111",
-    title: "Solidity Workshop: Build Your First dApp",
+    title: "dev edu ...",
     description:
-      "A two-hour hands-on workshop covering Solidity fundamentals, Hardhat, and connecting a Next.js frontend with wagmi.",
+      "idk this is just an example event",
     category: "Workshop",
     materialsURI: "https://github.com/your-org/solidity-workshop",
     eventCodeHash: "SOLIDITY101",
@@ -39,7 +39,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
     startTime: BigInt(baseTime + 3 * 86400),
     closed: false,
     isSample: true,
-    code: "SOLIDITY101",
+    code: "hello123",
     materials: [
       {
         kind: "Slides",
@@ -61,9 +61,9 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
   {
     id: 1002n,
     organizer: "0x2222222222222222222222222222222222222222",
-    title: "Campus Hackathon Kickoff",
+    title: "bab hacks",
     description:
-      "Project ideation, team formation, and a sprint plan for the 36-hour campus hackathon.",
+      "idk example again",
     category: "Hackathon",
     materialsURI: "https://github.com/your-org/hackathon-kickoff",
     eventCodeHash: "HACK2026",
@@ -94,9 +94,9 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
   {
     id: 1003n,
     organizer: "0x3333333333333333333333333333333333333333",
-    title: "Resume Review for CS Majors",
+    title: "mantle workshop",
     description:
-      "1-on-1 resume reviews with industry mentors. Bring a draft and a project link.",
+      "idk example again",
     category: "Career",
     materialsURI: "https://example.com/resume-guide",
     eventCodeHash: "RESUME2026",
@@ -119,39 +119,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
       },
     ],
   },
-  {
-    id: 1004n,
-    organizer: "0x4444444444444444444444444444444444444444",
-    title: "Intro to Zero-Knowledge Proofs",
-    description:
-      "What ZK is, why it matters, and how to start building with circom and snarkjs.",
-    category: "Tech Talk",
-    materialsURI: "https://github.com/your-org/zk-intro",
-    eventCodeHash: "ZKPROOF",
-    capacity: 100n,
-    attendeeCount: 55n,
-    startTime: BigInt(baseTime + 5 * 86400),
-    closed: false,
-    isSample: true,
-    code: "ZKPROOF",
-    materials: [
-      {
-        kind: "Slides",
-        description: "ZK intro deck",
-        href: "https://docs.google.com/presentation/d/REPLACE_ME/edit",
-      },
-      {
-        kind: "GitHub Repo",
-        description: "Circom + snarkjs examples",
-        href: "https://github.com/your-org/zk-intro",
-      },
-      {
-        kind: "Reading",
-        description: "ZK whitepaper",
-        href: "https://example.com/zk-paper.pdf",
-      },
-    ],
-  },
+  
 ];
 
 // Generic fallback material list (for on-chain events that don't have a custom
@@ -164,4 +132,4 @@ export const SAMPLE_MATERIALS = [
 ];
 
 // Default code used by on-chain events created via the demo flow.
-export const DEMO_EVENT_CODE = "RECAPED2026";
+export const DEMO_EVENT_CODE = "examplecode";

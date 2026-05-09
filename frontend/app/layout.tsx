@@ -20,9 +20,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Recaped — Verify attendance. Keep what you learned.",
+  title: "Recaped",
   description:
-    "A mobile-first learning app for workshops, talks, and trainings. Verify attendance, unlock materials, claim a portable on-chain skill badge.",
+    "Create events and save material from those events.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
