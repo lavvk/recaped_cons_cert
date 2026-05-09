@@ -73,15 +73,26 @@ const connectors = connectorsForWallets(walletGroups, {
   projectId: projectId ?? "",
 });
 
-const wagmiConfig = createConfig({
-  connectors,
-  chains: [hardhat, sepolia],
-  transports: {
-    [hardhat.id]: http("http://127.0.0.1:8545"),
-    [sepolia.id]: http(),
-  },
-  ssr: true,
-});
+const isDev = process.env.NODE_ENV !== "production";
+
+const wagmiConfig = isDev
+  ? createConfig({
+      connectors,
+      chains: [sepolia, hardhat],
+      transports: {
+        [sepolia.id]: http(),
+        [hardhat.id]: http("http://127.0.0.1:8545"),
+      },
+      ssr: true,
+    })
+  : createConfig({
+      connectors,
+      chains: [sepolia],
+      transports: {
+        [sepolia.id]: http(),
+      },
+      ssr: true,
+    });
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(() => new QueryClient());
