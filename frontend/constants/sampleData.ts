@@ -44,7 +44,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
     closed: false,
     isSample: true,
     code: "hello123",
-    scannedAtDoor: true,
+    scannedAtDoor: false,
     materials: [
       {
         kind: "Slides",
@@ -112,7 +112,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
     closed: false,
     isSample: true,
     code: "RESUME2026",
-    scannedAtDoor: false,
+    scannedAtDoor: true,
     materials: [
       {
         kind: "Slides",

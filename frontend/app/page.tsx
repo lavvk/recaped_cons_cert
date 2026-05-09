@@ -28,8 +28,8 @@ export default function HomePage() {
           </span>
         </h1>
         <p className="text-[15px] text-ink/70 leading-relaxed max-w-[34ch]">
-          A softer take on event RSVPs. Verify attendance with your wallet,
-          unlock the slides, and pocket a skill badge.
+          Verify attendance with your wallet,
+          unlock the materials.
         </p>
         {!isConnected && (
           <div className="pt-1">
