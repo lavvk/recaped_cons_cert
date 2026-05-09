@@ -24,7 +24,7 @@ export default function HomePage() {
           Show up.
           <br />
           <span className="italic bg-gradient-to-r from-accent via-accent-warm to-accent-soft bg-clip-text text-transparent">
-            Keep the receipts.
+            Keep the notes.
           </span>
         </h1>
         <p className="text-[15px] text-ink/70 leading-relaxed max-w-[34ch]">
