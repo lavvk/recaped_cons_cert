@@ -25,6 +25,15 @@ const mantleEventTime = Math.floor(
   new Date("2026-04-28T00:00:00").getTime() / 1000
 );
 
+// Generic fallback material list for on-chain events that don't ship a custom
+// `materials` array. The real href comes from the event's `materialsURI`.
+export const SAMPLE_MATERIALS: { kind: string; description: string }[] = [
+  { kind: "Slides", description: "Presentation deck used during the talk." },
+  { kind: "GitHub Repo", description: "Starter code and finished examples." },
+  { kind: "Docs", description: "Curated reading list and references." },
+  { kind: "Recording", description: "Session recording (when available)." },
+];
+
 export const SAMPLE_EVENTS: SampleEvent[] = [
   {
     id: 1001n,
