@@ -1,0 +1,20 @@
+{
+  "name": "recaped",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Recaped — verify attendance and keep what you learned. Hardhat + Solidity workspace.",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
