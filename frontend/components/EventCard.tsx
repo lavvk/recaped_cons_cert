@@ -16,6 +16,8 @@ export type EventCardProps = {
   hasMaterials: boolean;
   status?: StatusKind;
   href?: string;
+  // Only the wallet that organized this event sees the delete affordance.
+  canDelete?: boolean;
 };
 
 // Deterministic gradient per event id so each card has its own "cover".
@@ -54,6 +56,7 @@ export function EventCard(props: EventCardProps) {
     capacity,
     status,
     href,
+    canDelete,
   } = props;
 
   const link = href ?? `/events/${id}`;
@@ -64,19 +67,21 @@ export function EventCard(props: EventCardProps) {
       href={link}
       className="card card-hover group block overflow-hidden relative"
     >
-      <button
-        type="button"
-        aria-label="Hide event"
-        title="Hide from list"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          hideEvent(String(id));
-        }}
-        className="absolute right-2 top-2 z-10 grid size-7 place-items-center rounded-full bg-black/40 text-white/80 hover:bg-red-500/80 hover:text-white opacity-0 group-hover:opacity-100 transition"
-      >
-        <X size={14} strokeWidth={2.5} />
-      </button>
+      {canDelete && (
+        <button
+          type="button"
+          aria-label="Delete event"
+          title="Delete event"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            hideEvent(String(id));
+          }}
+          className="absolute right-2 top-2 z-10 grid size-7 place-items-center rounded-full bg-black/50 text-white hover:bg-red-500 transition opacity-90"
+        >
+          <X size={14} strokeWidth={2.5} />
+        </button>
+      )}
       {/* Cover */}
       <div
         className="relative h-28 w-full"

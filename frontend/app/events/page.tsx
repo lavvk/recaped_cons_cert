@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
+import { useAccount } from "wagmi";
 import { EventCard } from "@/components/EventCard";
 import { NetworkGate } from "@/components/NetworkGate";
 import { SAMPLE_EVENTS } from "@/constants/sampleData";
@@ -14,6 +15,7 @@ const FILTERS = ["All", "Workshop", "Hackathon", "Career", "Tech Talk"];
 
 export default function EventsPage() {
   const { events: onchain, isLoading } = useAllOnchainEvents();
+  const { address } = useAccount();
   const [filter, setFilter] = useState("All");
   const [q, setQ] = useState("");
   const hidden = useHiddenIds();
@@ -90,21 +92,29 @@ export default function EventsPage() {
       )}
 
       <section className="space-y-3">
-        {filtered.map((e) => (
-          <EventCard
-            key={String(e.id)}
-            id={e.id}
-            title={e.title}
-            category={e.category}
-            organizer={e.organizer}
-            description={e.description}
-            startTime={e.startTime}
-            attendeeCount={e.attendeeCount}
-            capacity={e.capacity}
-            hasMaterials={!!e.materialsURI}
-            status={"isSample" in e && (e as any).isSample ? "sample" : undefined}
-          />
-        ))}
+        {filtered.map((e) => {
+          const isSample = "isSample" in e && (e as any).isSample;
+          const canDelete =
+            !isSample &&
+            !!address &&
+            e.organizer.toLowerCase() === address.toLowerCase();
+          return (
+            <EventCard
+              key={String(e.id)}
+              id={e.id}
+              title={e.title}
+              category={e.category}
+              organizer={e.organizer}
+              description={e.description}
+              startTime={e.startTime}
+              attendeeCount={e.attendeeCount}
+              capacity={e.capacity}
+              hasMaterials={!!e.materialsURI}
+              status={isSample ? "sample" : undefined}
+              canDelete={canDelete}
+            />
+          );
+        })}
       </section>
     </div>
   );

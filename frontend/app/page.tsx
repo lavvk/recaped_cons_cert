@@ -11,13 +11,17 @@ import { useAllOnchainEvents } from "@/hooks/useRecaped";
 import { useHiddenIds } from "@/lib/hidden";
 
 export default function HomePage() {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { events: onchain } = useAllOnchainEvents();
   const hidden = useHiddenIds();
-  const featured =
-    onchain.find((e) => !hidden.has(String(e.id))) ??
-    SAMPLE_EVENTS.find((e) => !hidden.has(String(e.id))) ??
-    SAMPLE_EVENTS[0];
+  const onchainPick = onchain.find((e) => !hidden.has(String(e.id)));
+  const samplePick = SAMPLE_EVENTS.find((e) => !hidden.has(String(e.id)));
+  const featured = onchainPick ?? samplePick ?? SAMPLE_EVENTS[0];
+  const featuredIsSample = !onchainPick;
+  const canDeleteFeatured =
+    !featuredIsSample &&
+    !!address &&
+    featured.organizer.toLowerCase() === address.toLowerCase();
 
   return (
     <div className="space-y-7 pb-6">
@@ -71,6 +75,7 @@ export default function HomePage() {
           attendeeCount={featured.attendeeCount}
           capacity={featured.capacity}
           hasMaterials={!!featured.materialsURI}
+          canDelete={canDeleteFeatured}
         />
       </section>
 
