@@ -52,11 +52,12 @@ export default function CreateEventPage() {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.title.trim() || !form.materialsURI.trim() || !form.eventCode.trim())
-      return;
+    if (!form.title.trim() || !form.materialsURI.trim()) return;
     const cap = BigInt(parseInt(form.capacity || "0", 10));
     if (cap <= 0n) return;
-    const codeHash = keccak256(toHex(form.eventCode.trim()));
+    // Contract stores a bytes32 codeHash; the QR-ticket flow doesn't use it,
+    // but we still need to pass *something* to satisfy the signature.
+    const codeHash = keccak256(toHex(form.eventCode.trim() || "qr-ticket"));
     const start = BigInt(dateToUnix(form.startTime));
     setCreatedId(null);
     if (nextId !== undefined) setPendingNewId(Number(nextId));
@@ -193,25 +194,13 @@ export default function CreateEventPage() {
           </div>
           <Field
             label="Materials link"
-            hint="Where attendees go after they verify (slides, GitHub, doc, etc.)"
+            hint="Unlocked for attendees after their wallet QR is scanned at the door."
           >
             <input
               className="input"
               value={form.materialsURI}
               onChange={(e) => update("materialsURI", e.target.value)}
               placeholder="https://… or ipfs://…"
-              required
-            />
-          </Field>
-          <Field
-            label="Event code"
-            hint="Attendees enter this to verify. Hashed before storing."
-          >
-            <input
-              className="input font-mono"
-              value={form.eventCode}
-              onChange={(e) => update("eventCode", e.target.value)}
-              placeholder="RECAPED2026"
               required
             />
           </Field>

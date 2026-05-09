@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { keccak256, toHex } from "viem";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
@@ -28,7 +27,7 @@ import {
   useRecapedWrite,
 } from "@/hooks/useRecaped";
 import { IS_CONFIGURED } from "@/constants/contract";
-import { SAMPLE_EVENTS, SAMPLE_MATERIALS, DEMO_EVENT_CODE } from "@/constants/sampleData";
+import { SAMPLE_EVENTS, SAMPLE_MATERIALS } from "@/constants/sampleData";
 import { shortAddress, formatDate } from "@/lib/format";
 import { recordEntry } from "@/lib/history";
 import type { RecapedEventInfo, RecapedAttendee } from "@/constants/abi";
@@ -132,10 +131,7 @@ export default function EventDetailPage() {
     return () => clearTimeout(t);
   }, [isSuccess]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [code, setCode] = useState("");
-  const [proof, setProof] = useState("");
   const [approveAddr, setApproveAddr] = useState("");
-  const [codeError, setCodeError] = useState<string | null>(null);
 
   const isOrganizer = useMemo(
     () =>
@@ -168,31 +164,6 @@ export default function EventDetailPage() {
     setPendingAction("join");
     reset();
     call("joinEvent", [onChainId]);
-  }
-
-  function handleVerify(e: React.FormEvent) {
-    e.preventDefault();
-    setCodeError(null);
-    if (onChainId === undefined) {
-      setCodeError("Demo events are read-only.");
-      return;
-    }
-    if (!code.trim()) {
-      setCodeError("Enter the event code.");
-      return;
-    }
-    const expected = event?.eventCodeHash;
-    if (expected && /^0x[0-9a-fA-F]+$/.test(expected)) {
-      const got = keccak256(toHex(code.trim()));
-      if (got.toLowerCase() !== expected.toLowerCase()) {
-        setCodeError("Wrong code.");
-        return;
-      }
-    }
-    const verificationURI = proof.trim() || `code:${code.trim()}`;
-    setPendingAction("verify");
-    reset();
-    call("submitAttendanceVerification", [onChainId, verificationURI]);
   }
 
   function handleApprove(e: React.FormEvent) {
@@ -360,36 +331,16 @@ export default function EventDetailPage() {
           )}
 
           {kind === "joined" && (
-            <form onSubmit={handleVerify} className="card p-5 space-y-4">
-              <div>
-                <h2 className="font-bold text-base">Verify your attendance</h2>
-                <p className="muted mt-1">
-                  Enter the code the organizer shared at the event.
-                </p>
+            <div className="card p-5 space-y-2 border-amber-400/30 bg-amber-400/5">
+              <div className="font-semibold text-amber-200">
+                Show your wallet QR at the door
               </div>
-              <div>
-                <label className="label">Event code</label>
-                <input
-                  className="input font-mono"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  placeholder="Event code"
-                  autoComplete="off"
-                />
-              </div>
-              {codeError && (
-                <div className="text-xs text-red-300 -mt-2">{codeError}</div>
-              )}
-              <button
-                type="submit"
-                className="btn-primary w-full"
-                disabled={isPending}
-              >
-                {isPending && pendingAction === "verify"
-                  ? "Submitting…"
-                  : "Verify Attendance"}
-              </button>
-            </form>
+              <p className="muted">
+                The organizer scans your wallet pass at the event. Once it's
+                scanned, your attendance is verified and you can claim the
+                badge here.
+              </p>
+            </div>
           )}
 
           {kind === "submitted" && (
