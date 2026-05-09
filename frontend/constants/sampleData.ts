@@ -87,7 +87,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
       {
         kind: "Slides",
         description: "Hackathon kickoff deck",
-        href: "https://docs.google.com/presentation",
+        href: "https://docs.google.com/presentation/d/1oa3GcBDAPhRcUWLuLN1LWpsaF6FiOWS40wryGfNDnV0/edit?usp=sharing",
       },
       {
         kind: "GitHub Repo",
@@ -120,7 +120,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
       {
         kind: "Slides",
         description: "Mantle event slides",
-        href: "https://docs.google.com/presentation",
+        href: "https://docs.google.com/presentation/d/1oa3GcBDAPhRcUWLuLN1LWpsaF6FiOWS40wryGfNDnV0/edit?usp=sharing",
       },
       {
         kind: "GitHub Repo",
