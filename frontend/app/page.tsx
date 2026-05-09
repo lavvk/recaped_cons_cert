@@ -8,11 +8,16 @@ import { EventCard } from "@/components/EventCard";
 import { NetworkGate } from "@/components/NetworkGate";
 import { SAMPLE_EVENTS } from "@/constants/sampleData";
 import { useAllOnchainEvents } from "@/hooks/useRecaped";
+import { useHiddenIds } from "@/lib/hidden";
 
 export default function HomePage() {
   const { isConnected } = useAccount();
   const { events: onchain } = useAllOnchainEvents();
-  const featured = onchain[0] ?? SAMPLE_EVENTS[0];
+  const hidden = useHiddenIds();
+  const featured =
+    onchain.find((e) => !hidden.has(String(e.id))) ??
+    SAMPLE_EVENTS.find((e) => !hidden.has(String(e.id))) ??
+    SAMPLE_EVENTS[0];
 
   return (
     <div className="space-y-7 pb-6">
