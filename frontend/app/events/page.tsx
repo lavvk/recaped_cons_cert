@@ -16,16 +16,16 @@ export default function EventsPage() {
   const [filter, setFilter] = useState("All");
   const [q, setQ] = useState("");
 
-  const showSamples = !IS_CONFIGURED || onchain.length === 0;
-
   const filtered = useMemo(() => {
-    const list = showSamples ? SAMPLE_EVENTS : onchain;
+    // Always show the three sample events first (for the demo), then any
+    // real on-chain events the user has created at this contract.
+    const list = IS_CONFIGURED ? [...SAMPLE_EVENTS, ...onchain] : SAMPLE_EVENTS;
     return list.filter((e) => {
       if (filter !== "All" && e.category !== filter) return false;
       if (q && !e.title.toLowerCase().includes(q.toLowerCase())) return false;
       return true;
     });
-  }, [showSamples, onchain, filter, q]);
+  }, [onchain, filter, q]);
 
   return (
     <div className="space-y-5 pb-6">
