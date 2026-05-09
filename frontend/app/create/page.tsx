@@ -19,6 +19,7 @@ const CATEGORIES = [
   "Tech Talk",
   "Club",
   "Training",
+  "Other",
 ];
 
 export default function CreateEventPage() {
@@ -37,6 +38,7 @@ export default function CreateEventPage() {
     capacity: "50",
     startTime: "",
   });
+  const [customCategory, setCustomCategory] = useState("");
 
   function update<K extends keyof typeof form>(k: K, v: string) {
     setForm((f) => ({ ...f, [k]: v }));
@@ -55,6 +57,9 @@ export default function CreateEventPage() {
     if (!form.title.trim() || !form.materialsURI.trim()) return;
     const cap = BigInt(parseInt(form.capacity || "0", 10));
     if (cap <= 0n) return;
+    const resolvedCategory =
+      form.category === "Other" ? customCategory.trim() : form.category;
+    if (!resolvedCategory) return;
     // Contract stores a bytes32 codeHash; the QR-ticket flow doesn't use it,
     // but we still need to pass *something* to satisfy the signature.
     const codeHash = keccak256(toHex(form.eventCode.trim() || "qr-ticket"));
@@ -65,7 +70,7 @@ export default function CreateEventPage() {
     call("createEvent", [
       form.title.trim(),
       form.description.trim(),
-      form.category,
+      resolvedCategory,
       form.materialsURI.trim(),
       codeHash,
       cap,
@@ -142,6 +147,7 @@ export default function CreateEventPage() {
                   capacity: "50",
                   startTime: "",
                 });
+                setCustomCategory("");
               }}
             >
               <Sparkles size={14} /> Create another
@@ -192,6 +198,21 @@ export default function CreateEventPage() {
               />
             </Field>
           </div>
+          {form.category === "Other" && (
+            <Field
+              label="Custom category"
+              hint="Type the category for your event."
+            >
+              <input
+                className="input"
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+                placeholder="e.g. Reading Group"
+                required
+                autoFocus
+              />
+            </Field>
+          )}
           <Field
             label="Materials link"
             hint="Unlocked for attendees after their wallet QR is scanned at the door."
