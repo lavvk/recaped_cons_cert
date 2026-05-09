@@ -8,6 +8,7 @@ import { NetworkGate } from "@/components/NetworkGate";
 import { SAMPLE_EVENTS } from "@/constants/sampleData";
 import { useAllOnchainEvents } from "@/hooks/useRecaped";
 import { IS_CONFIGURED } from "@/constants/contract";
+import { useHiddenIds } from "@/lib/hidden";
 
 const FILTERS = ["All", "Workshop", "Hackathon", "Career", "Tech Talk"];
 
@@ -15,17 +16,19 @@ export default function EventsPage() {
   const { events: onchain, isLoading } = useAllOnchainEvents();
   const [filter, setFilter] = useState("All");
   const [q, setQ] = useState("");
+  const hidden = useHiddenIds();
 
   const filtered = useMemo(() => {
     // Always show the three sample events first (for the demo), then any
     // real on-chain events the user has created at this contract.
     const list = IS_CONFIGURED ? [...SAMPLE_EVENTS, ...onchain] : SAMPLE_EVENTS;
     return list.filter((e) => {
+      if (hidden.has(String(e.id))) return false;
       if (filter !== "All" && e.category !== filter) return false;
       if (q && !e.title.toLowerCase().includes(q.toLowerCase())) return false;
       return true;
     });
-  }, [onchain, filter, q]);
+  }, [onchain, filter, q, hidden]);
 
   return (
     <div className="space-y-5 pb-6">

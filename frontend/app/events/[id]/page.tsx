@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -13,6 +13,7 @@ import {
   Users,
   Calendar,
   ShieldCheck,
+  Trash2,
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -30,6 +31,7 @@ import { IS_CONFIGURED } from "@/constants/contract";
 import { SAMPLE_EVENTS, SAMPLE_MATERIALS } from "@/constants/sampleData";
 import { shortAddress, formatDate } from "@/lib/format";
 import { recordEntry } from "@/lib/history";
+import { hideEvent } from "@/lib/hidden";
 import type { RecapedEventInfo, RecapedAttendee } from "@/constants/abi";
 
 const COVERS = [
@@ -72,6 +74,7 @@ function stepProgress(a?: RecapedAttendee): number {
 
 export default function EventDetailPage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
   const rawId = params?.id ?? "0";
   const numericId = Number(rawId);
   const isSampleId = numericId >= 1000;
@@ -409,6 +412,26 @@ export default function EventDetailPage() {
                 : "Approve Attendance"}
             </button>
           </form>
+
+          <div className="pt-2 border-t border-line/40">
+            <button
+              type="button"
+              className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-400/10 transition"
+              onClick={() => {
+                if (
+                  confirm(
+                    "Hide this event from the Browse list? The event still exists on-chain — this only removes it from the UI on this device."
+                  )
+                ) {
+                  hideEvent(String(onChainId));
+                  router.push("/events");
+                }
+              }}
+            >
+              <Trash2 size={13} strokeWidth={2.5} />
+              Hide event from list
+            </button>
+          </div>
         </section>
       )}
 
