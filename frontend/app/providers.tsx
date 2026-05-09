@@ -75,12 +75,19 @@ const connectors = connectorsForWallets(walletGroups, {
 
 const isDev = process.env.NODE_ENV !== "production";
 
+// viem's default public RPC for Sepolia is shared and frequently rate-limits.
+// Use publicnode (reliable, no key) by default; allow env override for users
+// who have their own Alchemy / Infura URL.
+const sepoliaRpc =
+  process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL ||
+  "https://ethereum-sepolia-rpc.publicnode.com";
+
 const wagmiConfig = isDev
   ? createConfig({
       connectors,
       chains: [sepolia, hardhat],
       transports: {
-        [sepolia.id]: http(),
+        [sepolia.id]: http(sepoliaRpc),
         [hardhat.id]: http("http://127.0.0.1:8545"),
       },
       ssr: true,
@@ -89,7 +96,7 @@ const wagmiConfig = isDev
       connectors,
       chains: [sepolia],
       transports: {
-        [sepolia.id]: http(),
+        [sepolia.id]: http(sepoliaRpc),
       },
       ssr: true,
     });
