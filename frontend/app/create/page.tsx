@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { keccak256, toHex } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, useChainId } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Sparkles, ExternalLink } from "lucide-react";
 import { NetworkGate } from "@/components/NetworkGate";
 import { TxStatus } from "@/components/TxStatus";
 import { useRecapedWrite, useNextEventId } from "@/hooks/useRecaped";
-import { IS_CONFIGURED } from "@/constants/contract";
+import { IS_CONFIGURED, CONTRACT_CHAIN_ID } from "@/constants/contract";
 import { dateToUnix } from "@/lib/format";
 
 const CATEGORIES = [
@@ -24,8 +24,10 @@ const CATEGORIES = [
 
 export default function CreateEventPage() {
   const { isConnected } = useAccount();
-  const { call, isPending, isSuccess, error, reset } = useRecapedWrite();
+  const chainId = useChainId();
+  const { call, hash, isPending, isSuccess, error, reset } = useRecapedWrite();
   const { data: nextId, refetch } = useNextEventId();
+  const wrongChain = isConnected && chainId !== CONTRACT_CHAIN_ID;
   const [createdId, setCreatedId] = useState<number | null>(null);
   const [pendingNewId, setPendingNewId] = useState<number | null>(null);
 
@@ -237,11 +239,32 @@ export default function CreateEventPage() {
           <button
             type="submit"
             className="btn-primary w-full"
-            disabled={isPending}
+            disabled={isPending || wrongChain}
+            title={wrongChain ? "Switch your wallet to the right network first." : undefined}
           >
-            {isPending ? "Creating…" : "Create Event"}
+            {wrongChain
+              ? "Switch network to create"
+              : isPending
+                ? hash
+                  ? "Waiting for confirmation…"
+                  : "Confirm in your wallet…"
+                : "Create Event"}
           </button>
         </form>
+      )}
+
+      {hash && !isSuccess && (
+        <a
+          href={`https://sepolia.etherscan.io/tx/${hash}`}
+          target="_blank"
+          rel="noreferrer"
+          className="card flex items-center justify-between gap-2 p-3 text-xs text-ink-mute hover:text-ink transition"
+        >
+          <span className="font-mono truncate">{hash.slice(0, 10)}…{hash.slice(-8)}</span>
+          <span className="inline-flex items-center gap-1 text-accent shrink-0">
+            View on Etherscan <ExternalLink size={12} />
+          </span>
+        </a>
       )}
 
       <TxStatus pending={isPending} success={isSuccess && !createdId} error={error} />
