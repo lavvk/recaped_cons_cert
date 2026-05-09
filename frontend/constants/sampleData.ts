@@ -18,16 +18,6 @@ export type SampleEvent = RecapedEventInfo & {
 
 const baseTime = Math.floor(Date.now() / 1000);
 
-// ---------------------------------------------------------------------------
-// EDIT THESE EVENTS
-// ---------------------------------------------------------------------------
-// - title / description / category: shown on the event card and detail page
-// - code: the password an attendee types to "verify" and unlock materials
-// - materials: list of files/links unlocked after verifying
-//   (kind = label, description = subtitle, href = real URL to the file/repo)
-// - capacity / attendeeCount / startTime: cosmetic for the demo
-// ---------------------------------------------------------------------------
-
 export const SAMPLE_EVENTS: SampleEvent[] = [
   {
     id: 1001n,
@@ -103,7 +93,7 @@ export const SAMPLE_EVENTS: SampleEvent[] = [
     title: "mantle workshop",
     description:
       "idk example again",
-    category: "Career",
+    category: "external event",
     materialsURI: "https://example.com/resume-guide",
     eventCodeHash: "RESUME2026",
     capacity: 30n,
