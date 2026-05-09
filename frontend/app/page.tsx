@@ -15,8 +15,9 @@ export default function HomePage() {
   const { events: onchain } = useAllOnchainEvents();
   const hidden = useHiddenIds();
   const onchainPick = onchain.find((e) => !hidden.has(String(e.id)));
-  const samplePick = SAMPLE_EVENTS.find((e) => !hidden.has(String(e.id)));
-  const featured = onchainPick ?? samplePick ?? SAMPLE_EVENTS[0];
+  // Sample events are never hidden — they're fixed demo content.
+  const samplePick = SAMPLE_EVENTS[0];
+  const featured = onchainPick ?? samplePick;
   const featuredIsSample = !onchainPick;
   const canDeleteFeatured =
     !featuredIsSample &&

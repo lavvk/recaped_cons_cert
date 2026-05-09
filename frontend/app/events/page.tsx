@@ -25,7 +25,9 @@ export default function EventsPage() {
     // real on-chain events the user has created at this contract.
     const list = IS_CONFIGURED ? [...SAMPLE_EVENTS, ...onchain] : SAMPLE_EVENTS;
     return list.filter((e) => {
-      if (hidden.has(String(e.id))) return false;
+      const isSample = "isSample" in e && (e as any).isSample;
+      // Sample events can never be hidden — they're fixed demo content.
+      if (!isSample && hidden.has(String(e.id))) return false;
       if (filter !== "All" && e.category !== filter) return false;
       if (q && !e.title.toLowerCase().includes(q.toLowerCase())) return false;
       return true;

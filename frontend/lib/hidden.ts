@@ -40,6 +40,15 @@ export function isHidden(eventId: string): boolean {
 export function useHiddenIds(): Set<string> {
   const [ids, setIds] = useState<Set<string>>(new Set());
   useEffect(() => {
+    // One-time cleanup: sample event IDs (>= 1000) should never be hidden.
+    // Older builds let users hide them by accident; prune those entries.
+    const current = read();
+    const cleaned = current.filter((id) => {
+      const n = Number(id);
+      return !Number.isFinite(n) || n < 1000;
+    });
+    if (cleaned.length !== current.length) write(cleaned);
+
     const refresh = () => setIds(new Set(read()));
     refresh();
     window.addEventListener("recaped:hidden", refresh);
